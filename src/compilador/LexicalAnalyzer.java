@@ -46,44 +46,26 @@ public class LexicalAnalyzer {
             return String.format("%d %s %s", linha, getType().name(), getData());
         }
 
-        /**
-         * @return the linha
-         */
         public int getLinha() {
             return linha;
         }
 
-        /**
-         * @param linha the linha to set
-         */
         public void setLinha(int linha) {
             this.linha = linha;
         }
 
-        /**
-         * @return the type
-         */
         public TokenType getType() {
             return type;
         }
 
-        /**
-         * @param type the type to set
-         */
         public void setType(TokenType type) {
             this.type = type;
         }
-
-        /**
-         * @return the data
-         */
+        
         public String getData() {
             return data;
         }
 
-        /**
-         * @param data the data to set
-         */
         public void setData(String data) {
             this.data = data;
         }
@@ -153,11 +135,10 @@ public class LexicalAnalyzer {
         return tokens;
     }
 
-    public static Archive arq;
+    
     File file;
-
     public void exec(String nomeArq) throws FileNotFoundException, IOException {
-        //arq = new Archive (nomeArq); //carrega arquivo para memoria        
+           
         file = new File(nomeArq);
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -169,17 +150,12 @@ public class LexicalAnalyzer {
 
         FileWriter arquivoSaida = new FileWriter(file.getParent() + "\\" + file.getName().replace(".txt", "") + "ORIGINAL+TOKENS" + ".txt");
         PrintWriter gravarArq = new PrintWriter(arquivoSaida);
-        /*
-        for (i=1; i<=10; i++) { 
-            gravarArq.printf("|%2d |%n", i); 
-        }*/
+        
 
         do {
-            // Create tokens and print them
+            
             ArrayList<Token> tokens = lex(lineInput, i);
-            //gravarArq.printf("%s%n", lineInput);
 
-            //tokenList.add(tokens.get(j));
             for (Token token : tokens) {
                 tokenList.add(token);
                 System.out.println(token);
@@ -190,12 +166,12 @@ public class LexicalAnalyzer {
                 tokenList.add(token);
                 
             }
-            //gravarArq.printf("%n");
+            
             lineInput = reader.readLine();
             i++;
         } while (lineInput != null);
 
-        //Tenta Unir Tokens de Tres aspas Duplas
+        
         int linha = 0;
         reader = new BufferedReader(new FileReader(file));
 
@@ -217,7 +193,7 @@ public class LexicalAnalyzer {
             if (token.getType().equals(TokenType.TRESASPASDUPLASOUSIMPLES)) {
                 TokenType tipo = token.type;
                 Token tokenCopia;
-                //int linhatoken = token.linha;
+                
                 do {
                     j++;
                     tokenCopia = tokenList.get(j);
@@ -313,7 +289,7 @@ public class LexicalAnalyzer {
         FileWriter resultadoAnalise = new FileWriter(file.getParent() + "\\" + file.getName().replace(".txt", "") + "RESULTADOANALISE" + ".txt");
         PrintWriter gravarArq = new PrintWriter(resultadoAnalise);
         String resultado = "";
-        do {
+        /*do {
 
             for (int i = 0; i < lineInput.length(); i++) {
                 char c = lineInput.charAt(i);
@@ -328,6 +304,20 @@ public class LexicalAnalyzer {
             j++;
             lineInput = reader.readLine();
         } while (lineInput != null);
+        */
+        
+        Pattern invalidos = Pattern.compile("[\\w|\\d|_]+");
+        for (int i = 0; i < tokenListFinal.size(); i++) {
+            Token token = tokenListFinal.get(i);
+            if (token.type == TokenType.PALAVRA){
+                if (!invalidos.matcher(token.data).matches()) {
+                    System.err.println(token.data + " <-" + "Token inválido na linha " + token.linha + "\n");
+                    resultado += (token.data + " <- " + "Token inválido na linha " + token.linha + "\r\n");
+                    contErros++;
+                }
+            }
+            
+        }
 
         if (contErros > 0) {
             gravarArq.printf(+contErros + " Erros Léxicos foram encontrados!\r\n");
