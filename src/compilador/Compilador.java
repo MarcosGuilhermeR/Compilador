@@ -18,7 +18,7 @@ public class Compilador {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        String path = "D:\\Dropbox\\Cefet-Engenharia\\7oPeríodo\\Compilador\\Compilador Pyton para Js\\TESTE\\__init__.txt";
+        String path = "D:\\Dropbox\\Cefet-Engenharia\\7oPeríodo\\Compilador\\Compilador Pyton para Js\\Arquivos De Testes\\ENTRADACOMPLETA.txt";
         LexicalAnalyzer lexical = new LexicalAnalyzer();
         lexical.exec(path);
     }
